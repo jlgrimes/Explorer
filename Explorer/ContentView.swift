@@ -11,7 +11,7 @@ import AsyncHTTPClient
 import NIO
 import Supabase
 
-struct InsertModel: Encodable, Decodable {
+struct TaskModel: Encodable, Decodable, Hashable {
     let device_uuid: String?
     let task: String?
     let location: String?
@@ -20,6 +20,8 @@ struct InsertModel: Encodable, Decodable {
 }
 
 struct ContentView: View {
+    @State private var tasks: [TaskModel] = []
+    
     @State private var prompt: String = ""
     @State private var secretKey: String = " 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"
     @State private var openAIClient: Client
@@ -40,8 +42,44 @@ struct ContentView: View {
         supabaseClient = SupabaseClient(supabaseURL: URL(string: "https://hfaepibfavxjgenhhabc.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmYWVwaWJmYXZ4amdlbmhoYWJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwNjQ5ODIsImV4cCI6MjAwMDY0MDk4Mn0.umnbgZl5rEkvWc6cLDzu5Ibh0I5AtksFif80v1UefL0")
     }
     
+    private func fetchTasks() {
+        let query = supabaseClient.database
+                    .from("Tasks")
+                    .select() // keep it empty for all, else specify returned data
+                    .eq(column: "device_uuid", value: UUID)
+                    
+        Task {
+            do {
+                let response: [TaskModel] = try await query.execute().value
+                tasks = response;
+                print("### Returned: \(response)")
+            } catch {
+                print("### Insert Error: \(error)")
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
+            VStack {
+                ForEach(tasks, id: \.self) { task in
+                    let newFormatter = ISO8601DateFormatter()
+                    let date = newFormatter.date(from: task.time! + "Z")
+
+                    let formatter = RelativeDateTimeFormatter()
+                    // get exampleDate relative to the current date
+                    let relativeDate = formatter.localizedString(for: date!, relativeTo: Date.now)
+
+                    HStack {
+                        HStack {
+                            Text(task.emoji!)
+                            Text(task.task!)
+                        }
+                        Spacer()
+                        Text(relativeDate)
+                    }
+                }
+            }.padding()
             Text("Let's explore!")
             HStack {
                 TextField("Give me something", text: $prompt)
@@ -77,7 +115,7 @@ struct ContentView: View {
                             let newFormatter = ISO8601DateFormatter()
   
                             
-                            let insertData = InsertModel(device_uuid: UUID, task: task, location: location, time: date, emoji: emoji)
+                            let insertData = TaskModel(device_uuid: UUID, task: task, location: location, time: date, emoji: emoji)
                             
                             let query = supabaseClient.database
                                         .from("Tasks")
@@ -87,7 +125,7 @@ struct ContentView: View {
                                         .single() // specify you want to return a single value.
                             Task {
                                 do {
-                                    let response: [InsertModel] = try await query.execute().value
+                                    let response: [TaskModel] = try await query.execute().value
                                     print("### Returned: \(response)")
                                 } catch {
                                     print("### Insert Error: \(error)")
@@ -101,6 +139,9 @@ struct ContentView: View {
                     Image(systemName: "plus.app.fill")
                 }
             }
+        }
+        .onAppear {
+            fetchTasks()
         }
         .padding()
     }
