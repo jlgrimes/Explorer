@@ -19,6 +19,26 @@ struct TaskModel: Encodable, Decodable, Hashable {
     let emoji: String?
 }
 
+func getRelativeDate(task: TaskModel) -> String {
+    let newFormatter = ISO8601DateFormatter()
+    newFormatter.timeZone = TimeZone.current
+    
+    let seconds = TimeZone.current.secondsFromGMT()
+    let hours = seconds/3600
+    let minutes = abs(seconds/60) % 60
+    let tz = String(format: "%+.2d:%.2d", hours, minutes)
+    
+    let timeString = task.time! + tz
+    
+    let date = newFormatter.date(from: timeString)
+
+    let formatter = RelativeDateTimeFormatter()
+    // get exampleDate relative to the current date
+    let relativeDate = formatter.localizedString(for: date!, relativeTo: Date.now)
+    
+    return relativeDate
+}
+
 struct ContentView: View {
     @State private var tasks: [TaskModel] = []
     
@@ -63,12 +83,7 @@ struct ContentView: View {
         VStack {
             VStack {
                 ForEach(tasks, id: \.self) { task in
-                    let newFormatter = ISO8601DateFormatter()
-                    let date = newFormatter.date(from: task.time! + "Z")
-
-                    let formatter = RelativeDateTimeFormatter()
-                    // get exampleDate relative to the current date
-                    let relativeDate = formatter.localizedString(for: date!, relativeTo: Date.now)
+                    let relativeDate = getRelativeDate(task: task)
 
                     HStack {
                         HStack {
@@ -112,9 +127,7 @@ struct ContentView: View {
                             print("===")
                             print(location)
                             
-                            let newFormatter = ISO8601DateFormatter()
-  
-                            
+
                             let insertData = TaskModel(device_uuid: UUID, task: task, location: location, time: date, emoji: emoji)
                             
                             let query = supabaseClient.database
