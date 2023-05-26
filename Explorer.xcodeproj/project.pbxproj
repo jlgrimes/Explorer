@@ -16,6 +16,7 @@
 		B3EB01222A202CB9009F8A66 /* ExplorerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB01212A202CB9009F8A66 /* ExplorerUITestsLaunchTests.swift */; };
 		B3EB01312A202F82009F8A66 /* OpenAIKit in Frameworks */ = {isa = PBXBuildFile; productRef = B3EB01302A202F82009F8A66 /* OpenAIKit */; };
 		B3EB01342A203229009F8A66 /* AsyncHTTPClient in Frameworks */ = {isa = PBXBuildFile; productRef = B3EB01332A203229009F8A66 /* AsyncHTTPClient */; };
+		B3EB01372A20490A009F8A66 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B3EB01362A20490A009F8A66 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 			files = (
 				B3EB01342A203229009F8A66 /* AsyncHTTPClient in Frameworks */,
 				B3EB01312A202F82009F8A66 /* OpenAIKit in Frameworks */,
+				B3EB01372A20490A009F8A66 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +160,7 @@
 			packageProductDependencies = (
 				B3EB01302A202F82009F8A66 /* OpenAIKit */,
 				B3EB01332A203229009F8A66 /* AsyncHTTPClient */,
+				B3EB01362A20490A009F8A66 /* Supabase */,
 			);
 			productName = Explorer;
 			productReference = B3EB01012A202CB8009F8A66 /* Explorer.app */;
@@ -234,6 +237,7 @@
 			packageReferences = (
 				B3EB012F2A202F82009F8A66 /* XCRemoteSwiftPackageReference "openai-kit" */,
 				B3EB01322A203229009F8A66 /* XCRemoteSwiftPackageReference "async-http-client" */,
+				B3EB01352A20490A009F8A66 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			productRefGroup = B3EB01022A202CB8009F8A66 /* Products */;
 			projectDirPath = "";
@@ -621,6 +625,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		B3EB01352A20490A009F8A66 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -633,6 +645,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B3EB01322A203229009F8A66 /* XCRemoteSwiftPackageReference "async-http-client" */;
 			productName = AsyncHTTPClient;
+		};
+		B3EB01362A20490A009F8A66 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B3EB01352A20490A009F8A66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
