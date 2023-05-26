@@ -14,6 +14,8 @@
 		B3EB01162A202CB9009F8A66 /* ExplorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB01152A202CB9009F8A66 /* ExplorerTests.swift */; };
 		B3EB01202A202CB9009F8A66 /* ExplorerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB011F2A202CB9009F8A66 /* ExplorerUITests.swift */; };
 		B3EB01222A202CB9009F8A66 /* ExplorerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EB01212A202CB9009F8A66 /* ExplorerUITestsLaunchTests.swift */; };
+		B3EB01312A202F82009F8A66 /* OpenAIKit in Frameworks */ = {isa = PBXBuildFile; productRef = B3EB01302A202F82009F8A66 /* OpenAIKit */; };
+		B3EB01342A203229009F8A66 /* AsyncHTTPClient in Frameworks */ = {isa = PBXBuildFile; productRef = B3EB01332A203229009F8A66 /* AsyncHTTPClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3EB01342A203229009F8A66 /* AsyncHTTPClient in Frameworks */,
+				B3EB01312A202F82009F8A66 /* OpenAIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +82,7 @@
 				B3EB01142A202CB9009F8A66 /* ExplorerTests */,
 				B3EB011E2A202CB9009F8A66 /* ExplorerUITests */,
 				B3EB01022A202CB8009F8A66 /* Products */,
+				B3EB012E2A202F4E009F8A66 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,6 +132,13 @@
 			path = ExplorerUITests;
 			sourceTree = "<group>";
 		};
+		B3EB012E2A202F4E009F8A66 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +155,10 @@
 			dependencies = (
 			);
 			name = Explorer;
+			packageProductDependencies = (
+				B3EB01302A202F82009F8A66 /* OpenAIKit */,
+				B3EB01332A203229009F8A66 /* AsyncHTTPClient */,
+			);
 			productName = Explorer;
 			productReference = B3EB01012A202CB8009F8A66 /* Explorer.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +231,10 @@
 				Base,
 			);
 			mainGroup = B3EB00F82A202CB8009F8A66;
+			packageReferences = (
+				B3EB012F2A202F82009F8A66 /* XCRemoteSwiftPackageReference "openai-kit" */,
+				B3EB01322A203229009F8A66 /* XCRemoteSwiftPackageReference "async-http-client" */,
+			);
 			productRefGroup = B3EB01022A202CB8009F8A66 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -583,6 +603,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B3EB012F2A202F82009F8A66 /* XCRemoteSwiftPackageReference "openai-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dylanshine/openai-kit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		B3EB01322A203229009F8A66 /* XCRemoteSwiftPackageReference "async-http-client" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swift-server/async-http-client.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B3EB01302A202F82009F8A66 /* OpenAIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B3EB012F2A202F82009F8A66 /* XCRemoteSwiftPackageReference "openai-kit" */;
+			productName = OpenAIKit;
+		};
+		B3EB01332A203229009F8A66 /* AsyncHTTPClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B3EB01322A203229009F8A66 /* XCRemoteSwiftPackageReference "async-http-client" */;
+			productName = AsyncHTTPClient;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B3EB00F92A202CB8009F8A66 /* Project object */;
 }
