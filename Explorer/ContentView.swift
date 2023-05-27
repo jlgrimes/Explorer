@@ -17,8 +17,7 @@ struct ContentView: View {
     @State private var prompt: String = ""
     @State private var secretKey: String = " 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"
     @State private var openAIClient: Client
-    @State private var supabaseClient: SupabaseClient
-    
+
     @State private var UUID: String = UIDevice.current.identifierForVendor!.uuidString
     
     init() {
@@ -30,35 +29,11 @@ struct ContentView: View {
         let configuration = Configuration(apiKey: " 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", organization: "org-QqYksxfIJk7bzRPd68UsBvkj")
 
         openAIClient = OpenAIKit.Client(httpClient: httpClient, configuration: configuration)
-        
-        supabaseClient = SupabaseClient(supabaseURL: URL(string: "https://hfaepibfavxjgenhhabc.supabase.co")!, supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmYWVwaWJmYXZ4amdlbmhoYWJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwNjQ5ODIsImV4cCI6MjAwMDY0MDk4Mn0.umnbgZl5rEkvWc6cLDzu5Ibh0I5AtksFif80v1UefL0")
     }
-    
-    private func fetchTasks() {
-        let query = supabaseClient.database
-                    .from("Tasks")
-                    .select() // keep it empty for all, else specify returned data
-                    .eq(column: "device_uuid", value: UUID)
-                    .order(column: "time")
-                    
-        Task {
-            do {
-                let response: [TaskModel] = try await query.execute().value
-                tasks = response;
-                print("### Returned: \(response)")
-            } catch {
-                print("### Insert Error: \(error)")
-            }
-        }
-    }
-    
+
     var body: some View {
         VStack {
-            VStack {
-                ForEach(tasks, id: \.self) { task in
-                   TaskView(task: task)
-                }
-            }.padding()
+            TaskListScreen()
             Text("Let's explore!")
             HStack {
                 TextField("Give me something", text: $prompt)
@@ -112,9 +87,6 @@ struct ContentView: View {
                     Image(systemName: "plus.app.fill")
                 }
             }
-        }
-        .onAppear {
-            fetchTasks()
         }
         .padding()
     }

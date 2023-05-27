@@ -11,7 +11,9 @@ struct TaskListScreen: View {
     @StateObject private var vm = TasksViewModelImpl(service: SupabaseServiceImpl())
     
     var body: some View {
-        TaskListView(tasks: vm.tasks)
+        TaskListView(tasks: vm.tasks).task {
+            await vm.getTasks()
+        }
     }
 }
 
