@@ -11,34 +11,6 @@ import AsyncHTTPClient
 import NIO
 import Supabase
 
-struct TaskModel: Encodable, Decodable, Hashable {
-    let device_uuid: String?
-    let task: String?
-    let location: String?
-    let time: String?
-    let emoji: String?
-}
-
-func getRelativeDate(task: TaskModel) -> String {
-    let newFormatter = ISO8601DateFormatter()
-    newFormatter.timeZone = TimeZone.current
-    
-    let seconds = TimeZone.current.secondsFromGMT()
-    let hours = seconds/3600
-    let minutes = abs(seconds/60) % 60
-    let tz = String(format: "%+.2d:%.2d", hours, minutes)
-    
-    let timeString = task.time! + tz
-    
-    let date = newFormatter.date(from: timeString)
-
-    let formatter = RelativeDateTimeFormatter()
-    // get exampleDate relative to the current date
-    let relativeDate = formatter.localizedString(for: date!, relativeTo: Date.now)
-    
-    return relativeDate
-}
-
 struct ContentView: View {
     @State private var tasks: [TaskModel] = []
     
@@ -67,6 +39,7 @@ struct ContentView: View {
                     .from("Tasks")
                     .select() // keep it empty for all, else specify returned data
                     .eq(column: "device_uuid", value: UUID)
+                    .order(column: "time")
                     
         Task {
             do {
@@ -83,16 +56,7 @@ struct ContentView: View {
         VStack {
             VStack {
                 ForEach(tasks, id: \.self) { task in
-                    let relativeDate = getRelativeDate(task: task)
-
-                    HStack {
-                        HStack {
-                            Text(task.emoji!)
-                            Text(task.task!)
-                        }
-                        Spacer()
-                        Text(relativeDate)
-                    }
+                   TaskView(task: task)
                 }
             }.padding()
             Text("Let's explore!")
@@ -114,10 +78,12 @@ struct ContentView: View {
                                 model: Model.GPT3.textDavinci003,
                                 prompts: ["From a user-inputted prompt, tell me the task that was inputted excluding any time or any location as a noun: " + prompt, "From a user-inputted prompt, output a single emoji that best describes the task described: " + prompt, "Suggest a date and time for the task in ISO 8601 format. Todays date is " + dateString + "and the task prompt is " + prompt, "Suggest a familiar location the task should be completed at in a location format: " + prompt]
                             )
-                            let task = completion.choices[0].text.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let emoji = completion.choices[1].text.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let date = completion.choices[2].text.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let location = completion.choices[3].text.trimmingCharacters(in: .whitespacesAndNewlines)
+                            
+                            let garbageCharacters = CharacterSet(charactersIn: ". \n")
+                            let task = completion.choices[0].text.trimmingCharacters(in: garbageCharacters)
+                            let emoji = completion.choices[1].text.trimmingCharacters(in: garbageCharacters)
+                            let date = completion.choices[2].text.trimmingCharacters(in: garbageCharacters)
+                            let location = completion.choices[3].text.trimmingCharacters(in: garbageCharacters)
 
                             let insertData = TaskModel(device_uuid: UUID, task: task, location: location, time: date, emoji: emoji)
                             
