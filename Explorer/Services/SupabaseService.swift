@@ -35,4 +35,19 @@ final class SupabaseServiceImpl: SupabaseService {
             return []
         }
     }
+    
+    func insertTask(task: TaskModel) async {
+        let query = supabaseClient.database
+                    .from("Tasks")
+                    .insert(values: task,
+                            returning: .representation) // you will need to add this to return the added data
+                    .select(columns: "id") // specifiy which column names to be returned. Leave it empty for all columns
+                    .single() // specify you want to return a single value.
+        
+        do {
+            try await query.execute().value
+        } catch {
+            print("### Insert Error: \(error)")
+        }
+    }
 }
